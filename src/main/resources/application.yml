@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: credit-sussie-media-application
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: socailmedia
+      repositories:
+        enabled: true

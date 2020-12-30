@@ -1,0 +1,14 @@
+com\csharma\socialmedia\model\User.class
+com\csharma\socialmedia\repository\MediaRepository.class
+com\csharma\socialmedia\model\MediaPost.class
+com\csharma\socialmedia\service\userservice\UserServiceImpl.class
+com\csharma\socialmedia\configuration\DatabaseConfiguration.class
+com\csharma\socialmedia\service\mediaservice\MediaService.class
+com\csharma\socialmedia\controller\UserController.class
+com\csharma\socialmedia\service\mediaservice\MediaServiceImpl.class
+com\csharma\socialmedia\controller\MediaController.class
+com\csharma\socialmedia\repository\UserRepository.class
+com\csharma\socialmedia\configuration\RedisConfiguration.class
+com\csharma\socialmedia\request\CreatePostRequest.class
+com\csharma\socialmedia\Application.class
+com\csharma\socialmedia\service\userservice\UserService.class
