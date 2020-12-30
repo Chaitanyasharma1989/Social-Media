@@ -25,14 +25,13 @@ public class UserServiceImpl implements UserService {
     public void followUser(final String followerId, final String followeeId) {
         Optional<User> followerUser = userRepository.findUserByUserId(followeeId);
         Optional<User> followeeUser = userRepository.findUserByUserId(followeeId);
-        if (followerId.equalsIgnoreCase(followeeId)
-                && followeeUser.isPresent()
-                && followerUser.isPresent()) {
-            LOGGER.info("");
-        } else {
-            LOGGER.info("");
+
+        if (followeeUser.isPresent() && followerUser.isPresent()) {
+            LOGGER.info("Both follower and following are present in the database");
             followerUser.get().getFollowing().add(followeeUser.get());
-            LOGGER.info("");
+            LOGGER.info("Successfully added followee to the followers list");
+        } else {
+            LOGGER.info("Either follower or followee does not present in the database");
         }
     }
 
@@ -40,14 +39,13 @@ public class UserServiceImpl implements UserService {
     public void unFollowUser(final String followerId, final String followeeId) {
         Optional<User> followerUser = userRepository.findUserByUserId(followeeId);
         Optional<User> followeeUser = userRepository.findUserByUserId(followeeId);
-        if (followerId.equalsIgnoreCase(followeeId)
-                && followeeUser.isPresent()
-                && followerUser.isPresent()) {
-            LOGGER.info("");
-        } else {
-            LOGGER.info("");
+
+        if (followeeUser.isPresent() && followerUser.isPresent()) {
+            LOGGER.info("Both follower and following are present in the database");
             followerUser.get().getFollowing().remove(followeeUser.get());
-            LOGGER.info("");
+            LOGGER.info("Successfully removed followee from followers list");
+        } else {
+            LOGGER.info("Either follower or followee does not present in the database");
         }
     }
 }

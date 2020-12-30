@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 
 @Document(collection = "Users")
@@ -13,7 +12,6 @@ public class User {
 
     @Id
     private final Integer userId;
-
     private final List<User> following;
     private final List<MediaPost> posts;
 

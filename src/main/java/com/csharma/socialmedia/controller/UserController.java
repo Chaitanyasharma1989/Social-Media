@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/user")
 public class UserController {
 
     private final UserService userService;
@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "unFollow")
+    @PatchMapping(value = "unfollow")
     public ResponseEntity unFollowUser(@RequestParam String followerId, @RequestParam String followeeId) {
         userService.unFollowUser(followerId, followeeId);
         return ResponseEntity.ok().build();

@@ -1,18 +1,12 @@
 package com.csharma.socialmedia.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
-@Document(collection = "MediaPosts")
 public class MediaPost {
 
-    @Id
     private final String postId;
-
     private final LocalDateTime insertTimeStamp;
 
     @SuppressWarnings("unused")

@@ -3,7 +3,6 @@ package com.csharma.socialmedia.service.mediaservice;
 
 import com.csharma.socialmedia.model.MediaPost;
 import com.csharma.socialmedia.model.User;
-import com.csharma.socialmedia.repository.MediaRepository;
 import com.csharma.socialmedia.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +50,14 @@ public class MediaServiceImpl implements MediaService {
             LOGGER.info("User not found in database with userId {}", userId);
             return null;
         } else {
+            LOGGER.info("User found in database with userId {}", userId);
             mediaPosts(currentUser.get());
+            LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
             for (int j = 0; j < 20 && !mediaPosts(currentUser.get()).isEmpty(); j++) {
                 userMediaPosts.add(mediaPosts(currentUser.get()).poll());
             }
         }
+        LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
         return userMediaPosts;
     }
 
@@ -69,6 +71,7 @@ public class MediaServiceImpl implements MediaService {
         LOGGER.info("Adding posts of current user followings to heap");
         user.getFollowing()
                 .forEach(currentUser -> currentUser.getPosts().stream().limit(20).forEach(mediaPosts::add));
+        LOGGER.info("Successfully retrieved media post for userId {}", user.getUserId());
         return mediaPosts;
     }
 }
