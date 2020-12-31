@@ -1,6 +1,7 @@
 package com.csharma.socialmedia.controller;
 
 
+import com.csharma.socialmedia.exception.ServiceException;
 import com.csharma.socialmedia.model.MediaPost;
 import com.csharma.socialmedia.request.CreatePostRequest;
 import com.csharma.socialmedia.service.mediaservice.MediaService;
@@ -28,7 +29,7 @@ public class MediaController {
     }
 
     @PostMapping(value = "/user-post")
-    public ResponseEntity mediaPost(@RequestBody @Valid final CreatePostRequest createPostRequest) {
+    public ResponseEntity mediaPost(@RequestBody @Valid final CreatePostRequest createPostRequest) throws ServiceException {
         LOGGER.info("Received request to post the user media content for user {}", createPostRequest.getUserId());
         mediaService.createPost(createPostRequest.getUserId(), createPostRequest.getPostId(), createPostRequest.getContent());
         LOGGER.info("Successfully completed request to post the user media content for user {}", createPostRequest.getUserId());
@@ -37,7 +38,7 @@ public class MediaController {
 
     @GetMapping(value = "/user-posts/{userId}")
     @Cacheable(key = "#userId", cacheNames = "mediaPosts")
-    public ResponseEntity<List<MediaPost>> newsFeeds(@PathVariable("userId") @NotNull String userId) {
+    public ResponseEntity<List<MediaPost>> newsFeeds(@PathVariable("userId") @NotNull String userId) throws ServiceException {
         LOGGER.info("Received request to fetch top 20 new feed for user {}", userId);
         List<MediaPost> mediaPostList = mediaService.newsFeeds(userId);
         LOGGER.info("Successfully completed request to fetch top 20 new feed for user {}", userId);

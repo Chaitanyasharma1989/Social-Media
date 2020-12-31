@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void followUser(final String followerId, final String followeeId) {
+    public void followUser(final String followerId, final String followeeId) throws ServiceException {
         Optional<User> followeeUser = Optional.ofNullable(userRepository.findUserByUserId(followeeId));
         Optional<User> followerUser = Optional.ofNullable(userRepository.findUserByUserId(followerId));
 
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void unFollowUser(final String followerId, final String followeeId) {
+    public void unFollowUser(final String followerId, final String followeeId) throws ServiceException {
         Optional<User> followeeUser = Optional.ofNullable(userRepository.findUserByUserId(followeeId));
         Optional<User> followerUser = Optional.ofNullable(userRepository.findUserByUserId(followerId));
 

@@ -30,7 +30,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public void createPost(final String userId, final String postId, final String content) {
+    public void createPost(final String userId, final String postId, final String content) throws ServiceException {
         Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         LOGGER.info("Checking for existing user with userId {} in the system", userId);
         if (currentUser.isPresent()) {
@@ -41,12 +41,12 @@ public class MediaServiceImpl implements MediaService {
             userRepository.save(currentUser.get());
             LOGGER.info("Successfully updated current user with userId {} post with postId {} in database", userId, postId);
         } else {
-            throw new ServiceException("User found in database");
+            throw new ServiceException("User not found in database");
         }
     }
 
     @Override
-    public List<MediaPost> newsFeeds(final String userId) {
+    public List<MediaPost> newsFeeds(final String userId) throws ServiceException {
         List<MediaPost> userMediaPosts = new ArrayList<>();
         Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         if (!currentUser.isPresent()) {

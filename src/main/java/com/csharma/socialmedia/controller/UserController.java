@@ -1,6 +1,7 @@
 package com.csharma.socialmedia.controller;
 
 
+import com.csharma.socialmedia.exception.ServiceException;
 import com.csharma.socialmedia.request.UserRequest;
 import com.csharma.socialmedia.service.userservice.UserService;
 import org.slf4j.Logger;
@@ -24,13 +25,13 @@ public class UserController {
     }
 
     @PutMapping(value = "follow")
-    public ResponseEntity followUser(@RequestBody @Valid UserRequest userRequest) {
+    public ResponseEntity followUser(@RequestBody @Valid UserRequest userRequest) throws ServiceException {
         userService.followUser(userRequest.getFollowerId(), userRequest.getFolloweeId());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "unfollow")
-    public ResponseEntity unFollowUser(@RequestBody @Valid UserRequest userRequest) {
+    public ResponseEntity unFollowUser(@RequestBody @Valid UserRequest userRequest) throws ServiceException {
         userService.unFollowUser(userRequest.getFollowerId(), userRequest.getFolloweeId());
         return ResponseEntity.ok().build();
     }

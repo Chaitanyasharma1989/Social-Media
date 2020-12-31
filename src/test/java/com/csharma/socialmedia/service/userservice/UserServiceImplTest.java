@@ -67,7 +67,7 @@ public class UserServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldAbleToFollowUserIfBothArePresentInDatabaseAndFollowerIsNotPresentInFollowingList() {
+    public void shouldAbleToFollowUserIfBothArePresentInDatabaseAndFollowerIsNotPresentInFollowingList() throws ServiceException {
         int updatedFollowingSize = 5;
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
@@ -76,7 +76,7 @@ public class UserServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldNotAbleToFollowUserIfBothArePresentInDatabaseAndFollowerIsPresentInFollowingList() {
+    public void shouldNotAbleToFollowUserIfBothArePresentInDatabaseAndFollowerIsPresentInFollowingList() throws ServiceException {
         int updatedFollowingSize = 5;
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
@@ -85,7 +85,7 @@ public class UserServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldAbleToUnFollowUserIfBothArePresentInDatabaseAndFollowerIsPresentInFollowingList() {
+    public void shouldAbleToUnFollowUserIfBothArePresentInDatabaseAndFollowerIsPresentInFollowingList() throws ServiceException {
         int updatedFollowingSize = 4;
         users.add(new User(userIdFollower, Collections.emptyList(), Collections.emptyList()));
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
@@ -95,7 +95,7 @@ public class UserServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldAbleToUnFollowUserIfBothArePresentInDatabaseAndFollowerIsNotPresentInFollowingList() {
+    public void shouldAbleToUnFollowUserIfBothArePresentInDatabaseAndFollowerIsNotPresentInFollowingList() throws ServiceException {
         int updatedFollowingSize = 4;
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
@@ -104,49 +104,49 @@ public class UserServiceImplTest extends TestCase {
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFolloweeIdIsNotPresent() {
+    public void shouldNotAbleToFollowUserIfFolloweeIdIsNotPresent() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser(userIdFollower, null);
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFollowerIdIsNull() {
+    public void shouldNotAbleToFollowUserIfFollowerIdIsNull() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser(null, userIdFollowee);
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFollowerIdAndFolloweeIdAreNull() {
+    public void shouldNotAbleToFollowUserIfFollowerIdAndFolloweeIdAreNull() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser(null, null);
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFollowerAndFolloweeIdAreEmpty() {
+    public void shouldNotAbleToFollowUserIfFollowerAndFolloweeIdAreEmpty() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser("", "");
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFolloweeIdIsEmpty() {
+    public void shouldNotAbleToFollowUserIfFolloweeIdIsEmpty() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser(userIdFollower, "");
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFollowerIdIsEmpty() {
+    public void shouldNotAbleToFollowUserIfFollowerIdIsEmpty() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser("", userIdFollowee);
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToFollowUserIfFollowerIdAndFolloweeIdIsEmpty() {
+    public void shouldNotAbleToFollowUserIfFollowerIdAndFolloweeIdIsEmpty() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         when(userRepository.findUserByUserId(userIdFollower)).thenReturn(userFollower);
         userService.followUser("", "");

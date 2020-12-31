@@ -117,7 +117,7 @@ public class MediaServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldAbleToPostContentForExistingUser() {
+    public void shouldAbleToPostContentForExistingUser() throws ServiceException {
         int numberOfPostAfterAdditionOfNewPost = userFollowee.getPosts().size() + 1;
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         mediaService.createPost(userIdFollowee, postIdFollowee, postContent);
@@ -125,13 +125,13 @@ public class MediaServiceImplTest extends TestCase {
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotAbleToPostForNoExistingUser() {
+    public void shouldNotAbleToPostForNoExistingUser() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         mediaService.createPost(userIdFollower, postIdFollowee, postContent);
     }
 
     @Test
-    public void shouldBeAbleToFetchUserFeedForExistingUserWithLessThanTwentyFeeds() {
+    public void shouldBeAbleToFetchUserFeedForExistingUserWithLessThanTwentyFeeds() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
         Assert.assertNotEquals(mediaPosts.size(), userFollowee.getPosts().size());
@@ -139,27 +139,27 @@ public class MediaServiceImplTest extends TestCase {
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotBeAbleToFetchUserFeedForNullUserID() {
+    public void shouldNotBeAbleToFetchUserFeedForNullUserID() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(null);
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotBeAbleToFetchUserFeedForBlankUserID() {
+    public void shouldNotBeAbleToFetchUserFeedForBlankUserID() throws ServiceException {
         String blankString = " ";
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(blankString);
     }
 
     @Test(expected = ServiceException.class)
-    public void shouldNotBeAbleToFetchUserFeedForEmptyUserID() {
+    public void shouldNotBeAbleToFetchUserFeedForEmptyUserID() throws ServiceException {
         String emptyString = " ";
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(emptyString);
     }
 
     @Test
-    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIfOnlyFolloweeHasMoreThanLimitFeed() {
+    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIfOnlyFolloweeHasMoreThanLimitFeed() throws ServiceException {
         getUserWithMoreThan20Feeds();
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
@@ -171,7 +171,7 @@ public class MediaServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIfFollowerHasMoreThan20Feeds() {
+    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIfFollowerHasMoreThan20Feeds() throws ServiceException {
         userFollowee.getPosts().clear();
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
@@ -182,7 +182,7 @@ public class MediaServiceImplTest extends TestCase {
     }
 
     @Test
-    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIFBothFolloweeAndFollowerHasMoreThanLimit() {
+    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIFBothFolloweeAndFollowerHasMoreThanLimit() throws ServiceException {
         MediaPost mediaPost1 = new MediaPost("mediaPost1PresentDay", LocalDateTime.now());
         MediaPost mediaPost2 = new MediaPost("mediaPostMinus20days", LocalDateTime.now().minusDays(20));
         MediaPost mediaPost3 = new MediaPost("mediaPostMinus21days", LocalDateTime.now().minusDays(21));
