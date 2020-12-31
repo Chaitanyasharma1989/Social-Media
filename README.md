@@ -14,7 +14,7 @@ Below are the functionality implemented in this application.
 
 Future Scope :
 
-With regards to microservice architecture we can segreagated the responsibilities mentioned in this service into below mentioned components to ditribute the 
+With regards to microservice architecture we can segreagate the responsibilities mentioned in this service into below mentioned components to ditribute the 
 traffic and scale the particular application based on the load/use cases.
 
 1. Feed Microservice Service
