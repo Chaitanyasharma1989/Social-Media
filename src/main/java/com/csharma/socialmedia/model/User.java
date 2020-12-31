@@ -11,7 +11,7 @@ import java.util.Objects;
 public class User {
 
     @Id
-    private final Integer userId;
+    private final String userId;
     private final List<User> following;
     private final List<MediaPost> posts;
 
@@ -20,7 +20,7 @@ public class User {
         this(null, null, null);
     }
 
-    public User(final Integer userId,
+    public User(final String userId,
                 final List<User> following,
                 final List<MediaPost> posts) {
         this.userId = userId;
@@ -28,7 +28,7 @@ public class User {
         this.posts = posts;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 

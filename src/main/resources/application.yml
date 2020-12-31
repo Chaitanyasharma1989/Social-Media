@@ -8,3 +8,26 @@ spring:
       database: socailmedia
       repositories:
         enabled: true
+  redis:
+    database: 0
+    host: localhost
+    password: password
+    port: 16379
+
+server:
+  port: 8080
+
+info:
+  app:
+    name: credit-sussie-media-application
+    description: credit-sussie-media-application
+    version: @project.version@
+
+management:
+  security:
+    enabled: false
+  port: 9000
+
+
+redis:
+  enabled: true

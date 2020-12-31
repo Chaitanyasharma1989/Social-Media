@@ -1,16 +1,18 @@
 package com.csharma.socialmedia.controller;
 
 
+import com.csharma.socialmedia.request.UserRequest;
 import com.csharma.socialmedia.service.userservice.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/user")
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping(value = "/user")
 public class UserController {
 
     private final UserService userService;
@@ -21,15 +23,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PatchMapping(value = "follow")
-    public ResponseEntity followUser(@RequestParam String followerId, @RequestParam String followeeId) {
-        userService.followUser(followerId, followeeId);
+    @PutMapping(value = "follow")
+    public ResponseEntity followUser(@RequestBody @Valid UserRequest userRequest) {
+        userService.followUser(userRequest.getFollowerId(), userRequest.getFolloweeId());
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "unfollow")
-    public ResponseEntity unFollowUser(@RequestParam String followerId, @RequestParam String followeeId) {
-        userService.unFollowUser(followerId, followeeId);
+    @PutMapping(value = "unfollow")
+    public ResponseEntity unFollowUser(@RequestBody @Valid UserRequest userRequest) {
+        userService.unFollowUser(userRequest.getFollowerId(), userRequest.getFolloweeId());
         return ResponseEntity.ok().build();
     }
 

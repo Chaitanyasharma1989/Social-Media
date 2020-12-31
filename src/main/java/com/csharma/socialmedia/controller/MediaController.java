@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@RestController("/media")
+@RestController
+@RequestMapping(value = "/media")
 public class MediaController {
 
     private final MediaService mediaService;
@@ -24,14 +27,18 @@ public class MediaController {
     }
 
     @PostMapping(value = "/user-post")
-    public ResponseEntity mediaPost(@RequestBody final CreatePostRequest createPostRequest) {
+    public ResponseEntity mediaPost(@RequestBody @Valid final CreatePostRequest createPostRequest) {
+        LOGGER.info("Received request to post the user media content for user {}", createPostRequest.getUserId());
         mediaService.createPost(createPostRequest.getUserId(), createPostRequest.getPostId(), createPostRequest.getContent());
+        LOGGER.info("Successfully completed request to post the user media content for user {}", createPostRequest.getUserId());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/user-posts/{userId}")
-    public ResponseEntity newsFeeds(@PathVariable("userId") String userId) {
+    public ResponseEntity<List<MediaPost>> newsFeeds(@PathVariable("userId") @NotNull String userId) {
+        LOGGER.info("Received request to fetch top 20 new feed for user {}", userId);
         List<MediaPost> mediaPostList = mediaService.newsFeeds(userId);
+        LOGGER.info("Successfully completed request to fetch top 20 new feed for user {}", userId);
         return ResponseEntity.ok(mediaPostList);
     }
 }

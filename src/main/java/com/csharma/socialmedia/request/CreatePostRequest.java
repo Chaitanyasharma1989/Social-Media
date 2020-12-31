@@ -1,9 +1,25 @@
 package com.csharma.socialmedia.request;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+
 public class CreatePostRequest {
 
+    @NotNull(message = "{UserId should not be null}")
+    @NotEmpty(message = "{UserId should not be empty}")
+    @NotBlank(message = "{UserId should not be blank}")
     private final String userId;
+
+    @NotNull(message = "{PostId should not be null}")
+    @NotEmpty(message = "{PostId should not be empty}")
+    @NotBlank(message = "{PostId should not be blank}")
     private final String postId;
+
+    @NotNull(message = "{Content should not be null}")
+    @NotEmpty(message = "{Content should not be empty}")
+    @NotBlank(message = "{Content should not be blank}")
     private final String content;
 
     @SuppressWarnings("unused")

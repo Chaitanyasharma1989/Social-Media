@@ -1,6 +1,7 @@
 package com.csharma.socialmedia.service.mediaservice;
 
 
+import com.csharma.socialmedia.exception.ServiceException;
 import com.csharma.socialmedia.model.MediaPost;
 import com.csharma.socialmedia.model.User;
 import com.csharma.socialmedia.repository.UserRepository;
@@ -30,7 +31,7 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public void createPost(final String userId, final String postId, final String content) {
-        Optional<User> currentUser = userRepository.findUserByUserId(userId);
+        Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         LOGGER.info("Checking for existing user with userId {} in the system", userId);
         currentUser.ifPresent(user -> {
             LOGGER.info("User with user id {} found in database", userId);
@@ -43,18 +44,20 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<MediaPost> newsFeeds(String userId) {
+    public List<MediaPost> newsFeeds(final String userId) {
         List<MediaPost> userMediaPosts = new ArrayList<>();
-        Optional<User> currentUser = userRepository.findUserByUserId(userId);
+        Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         if (!currentUser.isPresent()) {
             LOGGER.info("User not found in database with userId {}", userId);
-            return null;
+
+            throw new ServiceException("Either follower or followee are not present in the database");
         } else {
             LOGGER.info("User found in database with userId {}", userId);
-            mediaPosts(currentUser.get());
+            PriorityQueue<MediaPost> mediaPosts = mediaPosts(currentUser.get());
             LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
-            for (int j = 0; j < 20 && !mediaPosts(currentUser.get()).isEmpty(); j++) {
-                userMediaPosts.add(mediaPosts(currentUser.get()).poll());
+
+            for (int j = 0; j < 20 && !mediaPosts.isEmpty(); j++) {
+                userMediaPosts.add(mediaPosts.poll());
             }
         }
         LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
@@ -70,7 +73,9 @@ public class MediaServiceImpl implements MediaService {
                 .forEach(mediaPosts::add);
         LOGGER.info("Adding posts of current user followings to heap");
         user.getFollowing()
-                .forEach(currentUser -> currentUser.getPosts().stream().limit(20).forEach(mediaPosts::add));
+                .forEach(currentUser -> currentUser.getPosts()
+                        .stream().limit(20)
+                        .forEach(mediaPosts::add));
         LOGGER.info("Successfully retrieved media post for userId {}", user.getUserId());
         return mediaPosts;
     }
