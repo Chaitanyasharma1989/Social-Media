@@ -124,12 +124,10 @@ public class MediaServiceImplTest extends TestCase {
         Assert.assertEquals(numberOfPostAfterAdditionOfNewPost, userFollowee.getPosts().size());
     }
 
-    @Test
+    @Test(expected = ServiceException.class)
     public void shouldNotAbleToPostForNoExistingUser() {
-        int numberOfPostAfterAdditionOfNewPost = userFollowee.getPosts().size();
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         mediaService.createPost(userIdFollower, postIdFollowee, postContent);
-        Assert.assertEquals(numberOfPostAfterAdditionOfNewPost, userFollowee.getPosts().size());
     }
 
     @Test

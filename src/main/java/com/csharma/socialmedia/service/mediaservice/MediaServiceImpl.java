@@ -33,14 +33,16 @@ public class MediaServiceImpl implements MediaService {
     public void createPost(final String userId, final String postId, final String content) {
         Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         LOGGER.info("Checking for existing user with userId {} in the system", userId);
-        currentUser.ifPresent(user -> {
+        if (currentUser.isPresent()) {
             LOGGER.info("User with user id {} found in database", userId);
             MediaPost post = new MediaPost(postId, LocalDateTime.now());
-            user.getPosts().add(post);
+            currentUser.get().getPosts().add(post);
             LOGGER.info("Updating current user with userId {} post with postId {} in database", userId, postId);
             userRepository.save(currentUser.get());
             LOGGER.info("Successfully updated current user with userId {} post with postId {} in database", userId, postId);
-        });
+        } else {
+            throw new ServiceException("User found in database");
+        }
     }
 
     @Override
@@ -49,13 +51,11 @@ public class MediaServiceImpl implements MediaService {
         Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         if (!currentUser.isPresent()) {
             LOGGER.info("User not found in database with userId {}", userId);
-
             throw new ServiceException("Either follower or followee are not present in the database");
         } else {
             LOGGER.info("User found in database with userId {}", userId);
             PriorityQueue<MediaPost> mediaPosts = mediaPosts(currentUser.get());
             LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
-
             for (int j = 0; j < 20 && !mediaPosts.isEmpty(); j++) {
                 userMediaPosts.add(mediaPosts.poll());
             }
