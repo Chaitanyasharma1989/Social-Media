@@ -7,6 +7,7 @@ import com.csharma.socialmedia.service.mediaservice.MediaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class MediaController {
     }
 
     @GetMapping(value = "/user-posts/{userId}")
+    @Cacheable(key = "#userId", cacheNames = "mediaPosts")
     public ResponseEntity<List<MediaPost>> newsFeeds(@PathVariable("userId") @NotNull String userId) {
         LOGGER.info("Received request to fetch top 20 new feed for user {}", userId);
         List<MediaPost> mediaPostList = mediaService.newsFeeds(userId);
