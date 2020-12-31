@@ -8,4 +8,9 @@ public class ServiceException extends Exception {
         super();
         this.message = message;
     }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }
