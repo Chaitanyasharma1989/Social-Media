@@ -37,7 +37,6 @@ public class MediaController {
     }
 
     @GetMapping(value = "/user-posts/{userId}")
-    @Cacheable(key = "#userId", cacheNames = "mediaPosts")
     public ResponseEntity<List<MediaPost>> newsFeeds(@PathVariable("userId") @NotNull String userId) throws ServiceException {
         LOGGER.info("Received request to fetch top 20 new feed for user {}", userId);
         List<MediaPost> mediaPostList = mediaService.newsFeeds(userId);
