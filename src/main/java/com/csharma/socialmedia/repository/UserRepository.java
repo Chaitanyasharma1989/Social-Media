@@ -1,13 +1,9 @@
 package com.csharma.socialmedia.repository;
 
 import com.csharma.socialmedia.model.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+public interface UserRepository {
+    User findUserByUserId(final String userId);
 
-@Repository
-public interface UserRepository extends MongoRepository<User, String> {
-
-    User findUserByUserId(String userId);
+    void saveUser(final String userId);
 }

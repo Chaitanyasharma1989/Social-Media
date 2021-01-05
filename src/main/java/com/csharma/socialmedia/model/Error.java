@@ -21,23 +21,12 @@ public class Error {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
     public String getResponseStatus() {
         return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

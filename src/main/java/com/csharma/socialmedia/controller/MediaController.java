@@ -29,7 +29,7 @@ public class MediaController {
     }
 
     @PostMapping(value = "/user-post")
-    public ResponseEntity mediaPost(@RequestBody @Valid final CreatePostRequest createPostRequest) throws ServiceException {
+    public <T> ResponseEntity<T> mediaPost(@RequestBody @Valid final CreatePostRequest createPostRequest) throws ServiceException {
         LOGGER.info("Received request to post the user media content for user {}", createPostRequest.getUserId());
         mediaService.createPost(createPostRequest.getUserId(), createPostRequest.getPostId(), createPostRequest.getContent());
         LOGGER.info("Successfully completed request to post the user media content for user {}", createPostRequest.getUserId());

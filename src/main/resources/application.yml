@@ -1,18 +1,6 @@
 spring:
   application:
     name: credit-sussie-media-application
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: socailmedia
-      repositories:
-        enabled: true
-  redis:
-    database: 0
-    host: localhost
-    password: password
-    port: 16379
 
 server:
   port: 8080
@@ -27,7 +15,3 @@ management:
   security:
     enabled: false
   port: 9000
-
-
-redis:
-  enabled: true

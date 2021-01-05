@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,37 +28,29 @@ public class UserServiceImpl implements UserService {
         Optional<User> followerUser = Optional.ofNullable(userRepository.findUserByUserId(followerId));
 
         if (followeeUser.isPresent() && followerUser.isPresent()) {
-            LOGGER.info("Both follower and following are present in the database");
-            if (followerUser.get().getFollowing().stream()
-                    .anyMatch(user -> user.getUserId().equalsIgnoreCase(followerId))) {
-                LOGGER.info("Follower already present in the following list");
-            } else {
-                followeeUser.get().getFollowing().add(followeeUser.get());
-                LOGGER.info("Successfully added followee to followers list");
-            }
+            LOGGER.info("Adding user {} to following list of {}", followeeId, followerId);
+            followerUser.get().follow(followeeId);
+            LOGGER.info("Successfully adding user {} to following list of {}", followeeId, followerId);
         } else {
-            throw new ServiceException("Either follower or followee are not present in the database");
+            throw new ServiceException("User not found");
         }
     }
 
     @Override
     public void unFollowUser(final String followerId, final String followeeId) throws ServiceException {
-        Optional<User> followeeUser = Optional.ofNullable(userRepository.findUserByUserId(followeeId));
         Optional<User> followerUser = Optional.ofNullable(userRepository.findUserByUserId(followerId));
+        Optional<User> followeeUser = Optional.ofNullable(userRepository.findUserByUserId(followeeId));
 
-        if (followeeUser.isPresent() && followerUser.isPresent()) {
-            LOGGER.info("Both follower and following are present in the database");
-            if (followeeUser.get().getFollowing().stream()
-                    .anyMatch(user -> user.getUserId().equalsIgnoreCase(followerId))) {
-
-                followeeUser.get().getFollowing().remove(followerUser.get());
-
-                LOGGER.info("Successfully removed followee from followers list");
+        if (followerUser.isPresent() && followeeUser.isPresent() && !followeeId.equalsIgnoreCase(followerId)) {
+            if (followerUser.get().following.contains(followeeId)) {
+                LOGGER.info("Removed user {} to following list of {}", followeeId, followerId);
+                followerUser.get().unfollow(followeeId);
+                LOGGER.info("Successfully removed user {} to following list of {}", followeeId, followerId);
             } else {
-                LOGGER.info("Follower not found in followee following list");
+                throw new ServiceException("User already present in not following list");
             }
         } else {
-            throw new ServiceException("Either follower or followee are not present in the database");
+            throw new ServiceException("User not found or FolloweeId and FollowerId cannot be same");
         }
     }
 }

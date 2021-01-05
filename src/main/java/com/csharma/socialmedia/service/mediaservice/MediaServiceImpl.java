@@ -10,18 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 @Service
 public class MediaServiceImpl implements MediaService {
 
     private final UserRepository userRepository;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MediaServiceImpl.class);
 
     @Autowired
@@ -30,53 +25,53 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public void createPost(final String userId, final String postId, final String content) throws ServiceException {
+    public void createPost(final String userId, final String postId, final String content) {
         Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
-        LOGGER.info("Checking for existing user with userId {} in the system", userId);
-        if (currentUser.isPresent()) {
-            LOGGER.info("User with user id {} found in database", userId);
-            MediaPost post = new MediaPost(postId, LocalDateTime.now());
-            currentUser.get().getPosts().add(post);
-            LOGGER.info("Updating current user with userId {} post with postId {} in database", userId, postId);
-            userRepository.save(currentUser.get());
-            LOGGER.info("Successfully updated current user with userId {} post with postId {} in database", userId, postId);
+        LOGGER.info("Checking for existing user with userId : {} in the system", userId);
+        if (!currentUser.isPresent()) {
+            LOGGER.info("Saving new user with userId : {} in the system", userId);
+            userRepository.saveUser(userId);
+            LOGGER.info("Successfully saved new user with userId : {} in the system", userId);
         } else {
-            throw new ServiceException("User not found in database");
+            LOGGER.info("Posting new post for user with userId : {} in the system with post id : {}", userId, postId);
+            currentUser.get().post(postId, content);
+            LOGGER.info("Successfully posted new post for user with userId : {} in the system with post id : {}", userId, postId);
         }
     }
 
     @Override
     public List<MediaPost> newsFeeds(final String userId) throws ServiceException {
-        List<MediaPost> userMediaPosts = new ArrayList<>();
+        List<MediaPost> userMediaPosts;
         Optional<User> currentUser = Optional.ofNullable(userRepository.findUserByUserId(userId));
         if (!currentUser.isPresent()) {
             LOGGER.info("User not found in database with userId {}", userId);
-            throw new ServiceException("Either follower or followee are not present in the database");
+            throw new ServiceException("User not found");
         } else {
-            LOGGER.info("User found in database with userId {}", userId);
-            PriorityQueue<MediaPost> mediaPosts = mediaPosts(currentUser.get());
-            LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
-            for (int j = 0; j < 20 && !mediaPosts.isEmpty(); j++) {
-                userMediaPosts.add(mediaPosts.poll());
-            }
+            Set<String> followingUsers = currentUser.get().following;
+            PriorityQueue<MediaPost> mediaPostQueue = new PriorityQueue<>(followingUsers.size(), (a, b) -> (b.postCounter - a.postCounter));
+            followingUsers.forEach(followeeUserId -> {
+                MediaPost mediaPost = userRepository.findUserByUserId(followeeUserId).mediaPost;
+                if (mediaPost != null) {
+                    mediaPostQueue.add(mediaPost);
+                }
+            });
+            userMediaPosts = getMediaPosts(mediaPostQueue);
         }
         LOGGER.info("Mapping and retrieving media post for user with userId {}", userId);
         return userMediaPosts;
     }
 
-    private PriorityQueue<MediaPost> mediaPosts(final User user) {
-        PriorityQueue<MediaPost> mediaPosts =
-                new PriorityQueue<>((a, b) -> b.getInsertTimeStamp().compareTo(a.getInsertTimeStamp()));
-        LOGGER.info("Adding posts of current users to heap");
-        user.getPosts().stream()
-                .limit(20)
-                .forEach(mediaPosts::add);
-        LOGGER.info("Adding posts of current user followings to heap");
-        user.getFollowing()
-                .forEach(currentUser -> currentUser.getPosts()
-                        .stream().limit(20)
-                        .forEach(mediaPosts::add));
-        LOGGER.info("Successfully retrieved media post for userId {}", user.getUserId());
-        return mediaPosts;
+    private List<MediaPost> getMediaPosts(PriorityQueue<MediaPost> mediaPostQueue) {
+        int mediaPostCounter = 0;
+        List<MediaPost> mediaPostList = new ArrayList<>();
+        while (!mediaPostQueue.isEmpty() && mediaPostCounter < 20) {
+            MediaPost mediaPost = mediaPostQueue.poll();
+            mediaPostList.add(mediaPost);
+            mediaPostCounter++;
+            if (mediaPost.nextMediaPost != null) {
+                mediaPostQueue.add(mediaPost.nextMediaPost);
+            }
+        }
+        return mediaPostList;
     }
 }

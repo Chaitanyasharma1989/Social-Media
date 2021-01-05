@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,7 +59,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldPostMediaContentForExistingUser() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(userId, postId, content);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +71,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfUserIdIsNull() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(null, postId, content);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +83,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfPostIdIsNull() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(userId, null, content);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +95,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfContentIdIsNull() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(userId, postId, null);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +107,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfAllThreeParametersAreNull() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(null, null, null);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +119,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfUserIdIsEmpty() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest("", postId, content);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -138,7 +131,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfPostIdIsEmpty() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(userId, "", content);
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -151,7 +143,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfContentIdIsEmpty() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest(userId, postId, "");
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -164,7 +155,6 @@ public class MediaControllerTest extends TestCase {
     public void shouldNotPostMediaContentForExistingUserIfAllThreeParametersAreEmpty() throws Exception {
         String urlTemplate = "/media/user-post";
         CreatePostRequest createPostRequest = new CreatePostRequest("", "", "");
-        doNothing().when(mediaService).createPost(userId, postId, content);
 
         this.mockMvc.perform(post(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -177,7 +167,7 @@ public class MediaControllerTest extends TestCase {
     @Test
     public void shouldAbleToFetchTop20NewsFeedForExistingUser() throws Exception {
         String urlTemplate = "/media/user-posts/{userId}";
-        when(mediaService.newsFeeds(userId)).thenReturn(Collections.singletonList(new MediaPost(postId, LocalDateTime.now())));
+        when(mediaService.newsFeeds(userId)).thenReturn(Collections.singletonList(new MediaPost(postId, content, LocalDateTime.now())));
         this.mockMvc.perform(get(urlTemplate, userId))
                 .andExpect(status().isOk())
                 .andDo(rs -> response = rs.getResponse().getContentAsString());
@@ -199,7 +189,7 @@ public class MediaControllerTest extends TestCase {
     @Test
     public void shouldNotBeAbleToFetchNewsFeedForNullUserId() throws Exception {
         String urlTemplate = "/media/user-posts/{userId}";
-        when(mediaService.newsFeeds(userId)).thenReturn(Collections.singletonList(new MediaPost(postId, LocalDateTime.now())));
+
         this.mockMvc.perform(get(urlTemplate, ""))
                 .andExpect(status().isNotFound())
                 .andDo(rs -> response = rs.getResponse().getContentAsString());

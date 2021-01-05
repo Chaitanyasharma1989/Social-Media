@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,8 +63,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(null, userIdFollowee);
 
-        doNothing().when(userService).followUser(userIdFollower, userIdFollowee);
-
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequest)))
@@ -76,8 +73,6 @@ public class UserControllerTest extends TestCase {
     public void shouldNotAbleToFollowUserForNullFolloweeId() throws Exception {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, null);
-
-        doNothing().when(userService).followUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,8 +86,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest("", userIdFollowee);
 
-        doNothing().when(userService).followUser(userIdFollower, userIdFollowee);
-
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequest)))
@@ -103,8 +96,6 @@ public class UserControllerTest extends TestCase {
     public void shouldNotAbleToFollowUserForEmptyFolloweeId() throws Exception {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, "");
-
-        doNothing().when(userService).followUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -117,8 +108,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(" ", userIdFollowee);
 
-        doNothing().when(userService).followUser(userIdFollower, userIdFollowee);
-
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequest)))
@@ -129,8 +118,6 @@ public class UserControllerTest extends TestCase {
     public void shouldNotAbleToFollowUserForBlankFolloweeId() throws Exception {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, " ");
-
-        doNothing().when(userService).followUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -143,7 +130,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, userIdFollowee);
 
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -156,8 +142,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(null, userIdFollowee);
 
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
-
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequest)))
@@ -168,8 +152,6 @@ public class UserControllerTest extends TestCase {
     public void shouldNotAbleToUnFollowUserForNullFolloweeId() throws Exception {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, null);
-
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -182,8 +164,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest("", userIdFollowee);
 
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
-
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequest)))
@@ -194,8 +174,6 @@ public class UserControllerTest extends TestCase {
     public void shouldNotAbleToUnFollowUserForEmptyFolloweeId() throws Exception {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, "");
-
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -208,8 +186,6 @@ public class UserControllerTest extends TestCase {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(" ", userIdFollowee);
 
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
-
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequest)))
@@ -220,8 +196,6 @@ public class UserControllerTest extends TestCase {
     public void shouldNotAbleToUnFollowUserForBlankFolloweeId() throws Exception {
         String urlTemplate = "/user/follow";
         UserRequest userRequest = new UserRequest(userIdFollower, " ");
-
-        doNothing().when(userService).unFollowUser(userIdFollower, userIdFollowee);
 
         this.mockMvc.perform(put(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)

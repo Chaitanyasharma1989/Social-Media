@@ -6,27 +6,29 @@ import java.util.Objects;
 
 public class MediaPost {
 
-    private final String postId;
-    private final LocalDateTime insertTimeStamp;
+    public static int counter = 0;
+
+    public final String postId;
+    public String content;
+    public int postCounter;
+    public MediaPost nextMediaPost;
+    public final LocalDateTime insertTimeStamp;
 
     @SuppressWarnings("unused")
     private MediaPost() {
-        this(null, null);
+        this(null, null, null);
     }
 
     public MediaPost(final String postId,
+                     final String content,
                      final LocalDateTime insertTimeStamp) {
         this.postId = postId;
+        this.content = content;
+        this.nextMediaPost = null;
+        this.postCounter = counter++;
         this.insertTimeStamp = insertTimeStamp;
     }
 
-    public String getPostId() {
-        return postId;
-    }
-
-    public LocalDateTime getInsertTimeStamp() {
-        return insertTimeStamp;
-    }
 
     @Override
     public boolean equals(Object o) {

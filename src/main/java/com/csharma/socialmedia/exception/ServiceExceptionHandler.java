@@ -13,7 +13,7 @@ public class ServiceExceptionHandler {
     private static final String RESPONSE_FAILURE = "FAILURE";
 
     @ExceptionHandler
-    public ResponseEntity handleServiceException(final ServiceException serviceException) {
+    public ResponseEntity<Object> handleServiceException(final ServiceException serviceException) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(buildServiceError(serviceException));
     }
 

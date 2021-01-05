@@ -27,7 +27,7 @@ public class ServiceExceptionHandlerTest extends TestCase {
     @Test
     public void shouldAbleToHandlerServiceException() {
         ServiceException serviceException = new ServiceException(MESSAGE);
-        ResponseEntity responseEntity = serviceExceptionHandler.handleServiceException(serviceException);
+        ResponseEntity<Object> responseEntity = serviceExceptionHandler.handleServiceException(serviceException);
         Error error = (Error) responseEntity.getBody();
 
         Assert.assertEquals(error.getCode(), STATUS_CODE);

@@ -13,11 +13,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MediaServiceImplTest extends TestCase {
@@ -27,239 +25,319 @@ public class MediaServiceImplTest extends TestCase {
 
     private User userFollowee;
 
-    private List<User> users;
-
     private final String userIdFollowee = "userIdFollowee";
     private final String postIdFollowee = "postIdFollowee";
     private final String postContent = "postContent";
-    private final String userIdFollower = "userIdFollower";
 
     private MediaServiceImpl mediaService;
 
     @Before
     public void setUp() {
         mediaService = new MediaServiceImpl(userRepository);
-
-        users = new ArrayList<>();
-
-        MediaPost mediaPost1 = new MediaPost("postId1", LocalDateTime.now().minusDays(30));
-        MediaPost mediaPost2 = new MediaPost("postId2", LocalDateTime.now().minusDays(31));
-        MediaPost mediaPost3 = new MediaPost("postId3", LocalDateTime.now().minusDays(32));
-        MediaPost mediaPost4 = new MediaPost("postId4", LocalDateTime.now().minusDays(33));
-
-        MediaPost mediaPost01 = new MediaPost("mediaPost1Minus1Day", LocalDateTime.now().minusDays(1));
-        MediaPost mediaPost02 = new MediaPost("mediaPost2Minus2Day", LocalDateTime.now().minusDays(2));
-        MediaPost mediaPost03 = new MediaPost("mediaPost3Minus3Day", LocalDateTime.now().minusDays(3));
-        MediaPost mediaPost04 = new MediaPost("mediaPost4Minus4Day", LocalDateTime.now().minusDays(4));
-        MediaPost mediaPost5 = new MediaPost("mediaPost5Minus5Day", LocalDateTime.now().minusDays(5));
-        MediaPost mediaPost6 = new MediaPost("mediaPost6Minus6Day", LocalDateTime.now().minusDays(6));
-        MediaPost mediaPost7 = new MediaPost("mediaPost7Minus7Day", LocalDateTime.now().minusDays(7));
-        MediaPost mediaPost8 = new MediaPost("mediaPost8Minus8Day", LocalDateTime.now().minusDays(8));
-        MediaPost mediaPost9 = new MediaPost("mediaPost9Minus9Day", LocalDateTime.now().minusDays(9));
-        MediaPost mediaPost10 = new MediaPost("mediaPost10Minus10Day", LocalDateTime.now().minusDays(10));
-        MediaPost mediaPost11 = new MediaPost("mediaPost11Minus11Day", LocalDateTime.now().minusDays(11));
-        MediaPost mediaPost12 = new MediaPost("mediaPost12Minus12Day", LocalDateTime.now().minusDays(12));
-        MediaPost mediaPost13 = new MediaPost("mediaPost13Minus13Day", LocalDateTime.now().minusDays(13));
-        MediaPost mediaPost14 = new MediaPost("mediaPost14Minus14Day", LocalDateTime.now().minusDays(14));
-        MediaPost mediaPost15 = new MediaPost("mediaPost15Minus15Day", LocalDateTime.now().minusDays(15));
-
-
-        User userFollower1 = new User("userFollower1", Collections.emptyList(), Collections.singletonList(mediaPost1));
-        User userFollower2 = new User("userFollower1", Collections.emptyList(), Collections.singletonList(mediaPost2));
-        User userFollower3 = new User("userFollower3", Collections.emptyList(), Collections.singletonList(mediaPost3));
-        User userFollower4 = new User("userFollower4", Collections.emptyList(), Collections.singletonList(mediaPost4));
-        User userFollower5 = new User("userFollower5", Collections.emptyList(), Collections.singletonList(mediaPost01));
-        User userFollower6 = new User("userFollower6", Collections.emptyList(), Collections.singletonList(mediaPost02));
-        User userFollower7 = new User("userFollower7", Collections.emptyList(), Collections.singletonList(mediaPost03));
-        User userFollower8 = new User("userFollower8", Collections.emptyList(), Collections.singletonList(mediaPost04));
-        User userFollower9 = new User("userFollower9", Collections.emptyList(), Collections.singletonList(mediaPost5));
-        User userFollower10 = new User("userFollower10", Collections.emptyList(), Collections.singletonList(mediaPost5));
-        User userFollower11 = new User("userFollower11", Collections.emptyList(), Collections.singletonList(mediaPost6));
-        User userFollower12 = new User("userFollower12", Collections.emptyList(), Collections.singletonList(mediaPost7));
-        User userFollower13 = new User("userFollower13", Collections.emptyList(), Collections.singletonList(mediaPost8));
-        User userFollower14 = new User("userFollower14", Collections.emptyList(), Collections.singletonList(mediaPost9));
-        User userFollower15 = new User("userFollower15", Collections.emptyList(), Collections.singletonList(mediaPost10));
-        User userFollower16 = new User("userFollower16", Collections.emptyList(), Collections.singletonList(mediaPost11));
-        User userFollower17 = new User("userFollower17", Collections.emptyList(), Collections.singletonList(mediaPost12));
-        User userFollower18 = new User("userFollower18", Collections.emptyList(), Collections.singletonList(mediaPost13));
-        User userFollower19 = new User("userFollower19", Collections.emptyList(), Collections.singletonList(mediaPost14));
-        User userFollower20 = new User("userFollower20", Collections.emptyList(), Collections.singletonList(mediaPost15));
-
-        users.add(userFollower1);
-        users.add(userFollower2);
-        users.add(userFollower3);
-        users.add(userFollower4);
-        users.add(userFollower5);
-        users.add(userFollower6);
-        users.add(userFollower7);
-        users.add(userFollower8);
-        users.add(userFollower9);
-        users.add(userFollower10);
-        users.add(userFollower11);
-        users.add(userFollower12);
-        users.add(userFollower13);
-        users.add(userFollower14);
-        users.add(userFollower15);
-        users.add(userFollower16);
-        users.add(userFollower17);
-        users.add(userFollower18);
-        users.add(userFollower19);
-        users.add(userFollower20);
-
-
-        List<MediaPost> mediaPosts = new ArrayList<>();
-        mediaPosts.add(mediaPost1);
-        mediaPosts.add(mediaPost2);
-        mediaPosts.add(mediaPost3);
-        mediaPosts.add(mediaPost4);
-
-        userFollowee = new User(userIdFollowee, users, mediaPosts);
+        userFollowee = new User(userIdFollowee);
     }
 
     @Test
-    public void shouldAbleToPostContentForExistingUser() throws ServiceException {
-        int numberOfPostAfterAdditionOfNewPost = userFollowee.getPosts().size() + 1;
+    public void shouldAbleToPostFirstMediaContentForExistingUser() {
+        userFollowee.following.add("userFollowing1");
+        userFollowee.following.add("userFollowing2");
+        userFollowee.following.add("userFollowing3");
+        userFollowee.following.add("userFollowing4");
+
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         mediaService.createPost(userIdFollowee, postIdFollowee, postContent);
-        Assert.assertEquals(numberOfPostAfterAdditionOfNewPost, userFollowee.getPosts().size());
+        Assert.assertEquals(userFollowee.following.size(), 5);
     }
 
-    @Test(expected = ServiceException.class)
-    public void shouldNotAbleToPostForNoExistingUser() throws ServiceException {
+    @Test
+    public void shouldAbleToPostMediaContentForExistingUserWithExistingMediaPosts() {
+        userFollowee.following.add("userFollowing1");
+        userFollowee.following.add("userFollowing2");
+        userFollowee.following.add("userFollowing3");
+        userFollowee.following.add("userFollowing4");
+
+        userFollowee.mediaPost = new MediaPost("latestPostId", "latestContent", LocalDateTime.now());
+
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
+        mediaService.createPost(userIdFollowee, postIdFollowee, postContent);
+        Assert.assertEquals(userFollowee.following.size(), 5);
+
+        Assert.assertEquals(userFollowee.mediaPost.nextMediaPost.content, "latestContent");
+        Assert.assertEquals(userFollowee.mediaPost.nextMediaPost.postId, "latestPostId");
+    }
+
+    @Test
+    public void shouldSaveUserIfNotExists() {
+        String userIdFollower = "userIdFollower";
         mediaService.createPost(userIdFollower, postIdFollowee, postContent);
+        verify(userRepository, atLeastOnce()).saveUser(userIdFollower);
     }
 
     @Test
     public void shouldBeAbleToFetchUserFeedForExistingUserWithLessThanTwentyFeeds() throws ServiceException {
+        userFollowee.following.add("userFollowing1");
+        userFollowee.following.add("userFollowing2");
+        userFollowee.following.add("userFollowing3");
+        userFollowee.following.add("userFollowing4");
+
+        userFollowee.mediaPost = new MediaPost("latestPostId", "latestContent", LocalDateTime.now());
+
+        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
+
+        User userFollowing1 = new User("userFollowing1");
+        User userFollowing2 = new User("userFollowing1");
+        User userFollowing3 = new User("userFollowing1");
+        User userFollowing4 = new User("userFollowing1");
+
+        userFollowing1.mediaPost = new MediaPost("postIdFollowing1", "contentId1", LocalDateTime.now());
+        userFollowing2.mediaPost = new MediaPost("postIdFollowing2", "contentId1", LocalDateTime.now());
+        userFollowing3.mediaPost = new MediaPost("postIdFollowing3", "contentId1", LocalDateTime.now());
+        userFollowing4.mediaPost = new MediaPost("postIdFollowing4", "contentId1", LocalDateTime.now());
+
+        when(userRepository.findUserByUserId("userFollowing1")).thenReturn(userFollowing1);
+        when(userRepository.findUserByUserId("userFollowing2")).thenReturn(userFollowing2);
+        when(userRepository.findUserByUserId("userFollowing3")).thenReturn(userFollowing3);
+        when(userRepository.findUserByUserId("userFollowing4")).thenReturn(userFollowing4);
+
+        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
+        Assert.assertEquals(mediaPosts.size(), 5);
+    }
+
+    @Test
+    public void shouldReturnListOfSizeZeroUserFeedForExistingUserAndHisFollowingHasNoMediaFeed() throws ServiceException {
+        userFollowee.following.add("userFollowing1");
+        userFollowee.following.add("userFollowing2");
+        userFollowee.following.add("userFollowing3");
+        userFollowee.following.add("userFollowing4");
+
+        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
+
+        User userFollowing1 = new User("userFollowing1");
+        User userFollowing2 = new User("userFollowing1");
+        User userFollowing3 = new User("userFollowing1");
+        User userFollowing4 = new User("userFollowing1");
+
+        when(userRepository.findUserByUserId("userFollowing1")).thenReturn(userFollowing1);
+        when(userRepository.findUserByUserId("userFollowing2")).thenReturn(userFollowing2);
+        when(userRepository.findUserByUserId("userFollowing3")).thenReturn(userFollowing3);
+        when(userRepository.findUserByUserId("userFollowing4")).thenReturn(userFollowing4);
+
+        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
+        Assert.assertEquals(mediaPosts.size(), 0);
+    }
+
+    @Test
+    public void shouldReturnListOfSizeZeroUserFeedForExistingUserHasNoFollowingAndHasNoMediaFeed() throws ServiceException {
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
         List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
-        Assert.assertNotEquals(mediaPosts.size(), userFollowee.getPosts().size());
-        Assert.assertNotNull(mediaPosts);
+        Assert.assertEquals(mediaPosts.size(), 0);
     }
+
+    @Test
+    public void shouldBeAbleToFetchUserFeedForAnyUserHavingOnlyTwentyMediaPosts() throws ServiceException {
+        userFollowee.following.add("userFollowing1");
+        userFollowee.following.add("userFollowing2");
+        userFollowee.following.add("userFollowing3");
+        userFollowee.following.add("userFollowing4");
+
+        getMediaPosts();
+        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
+
+        User userFollowing1 = new User("userFollowing1");
+        User userFollowing2 = new User("userFollowing1");
+        User userFollowing3 = new User("userFollowing1");
+        User userFollowing4 = new User("userFollowing1");
+
+
+        when(userRepository.findUserByUserId("userFollowing1")).thenReturn(userFollowing1);
+        when(userRepository.findUserByUserId("userFollowing2")).thenReturn(userFollowing2);
+        when(userRepository.findUserByUserId("userFollowing3")).thenReturn(userFollowing3);
+        when(userRepository.findUserByUserId("userFollowing4")).thenReturn(userFollowing4);
+
+        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
+        Assert.assertEquals(mediaPosts.size(), 20);
+    }
+
+    @Test
+    public void shouldBeAbleToFetchUserFeedForAnyUserAmdHisFollowingUsersHavingMoreThanTwentyMediaPosts() throws ServiceException {
+        getUserFollowingMediaPosts();
+        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
+        Assert.assertEquals(mediaPosts.size(), 20);
+        Assert.assertEquals(mediaPosts.get(0).postId, "postIdFollowing20");
+    }
+
 
     @Test(expected = ServiceException.class)
     public void shouldNotBeAbleToFetchUserFeedForNullUserID() throws ServiceException {
-        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
-        List<MediaPost> mediaPosts = mediaService.newsFeeds(null);
+        mediaService.newsFeeds(null);
     }
 
     @Test(expected = ServiceException.class)
     public void shouldNotBeAbleToFetchUserFeedForBlankUserID() throws ServiceException {
         String blankString = " ";
-        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
-        List<MediaPost> mediaPosts = mediaService.newsFeeds(blankString);
+        mediaService.newsFeeds(blankString);
     }
 
     @Test(expected = ServiceException.class)
     public void shouldNotBeAbleToFetchUserFeedForEmptyUserID() throws ServiceException {
         String emptyString = " ";
-        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
-        List<MediaPost> mediaPosts = mediaService.newsFeeds(emptyString);
+        mediaService.newsFeeds(emptyString);
     }
 
-    @Test
-    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIfOnlyFolloweeHasMoreThanLimitFeed() throws ServiceException {
-        getUserWithMoreThan20Feeds();
-        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
-        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
-
-        Assert.assertNotNull(mediaPosts);
-        Assert.assertNotEquals(mediaPosts.size(), userFollowee.getPosts().size());
-        Assert.assertEquals(mediaPosts.get(0).getInsertTimeStamp().getDayOfMonth(), LocalDateTime.now().minusDays(1).getDayOfMonth());
-        Assert.assertEquals(mediaPosts.get(19).getInsertTimeStamp().getDayOfMonth(), LocalDateTime.now().minusDays(10).getDayOfMonth());
-    }
-
-    @Test
-    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIfFollowerHasMoreThan20Feeds() throws ServiceException {
-        userFollowee.getPosts().clear();
-        when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
-        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
-
-        Assert.assertNotNull(mediaPosts);
-        Assert.assertNotEquals(mediaPosts.size(), userFollowee.getPosts().size());
-        Assert.assertEquals(mediaPosts.get(0).getInsertTimeStamp().getDayOfMonth(), LocalDateTime.now().minusDays(1).getDayOfMonth());
-    }
-
-    @Test
-    public void shouldBeAbleToFetchOnlyTwentyUserFeedForExistingUserIFBothFolloweeAndFollowerHasMoreThanLimit() throws ServiceException {
-        MediaPost mediaPost1 = new MediaPost("mediaPost1PresentDay", LocalDateTime.now());
-        MediaPost mediaPost2 = new MediaPost("mediaPostMinus20days", LocalDateTime.now().minusDays(20));
-        MediaPost mediaPost3 = new MediaPost("mediaPostMinus21days", LocalDateTime.now().minusDays(21));
-        MediaPost mediaPost4 = new MediaPost("mediaPostMinus22days", LocalDateTime.now().minusDays(22));
-        MediaPost mediaPost5 = new MediaPost("mediaPostMinus23days", LocalDateTime.now().minusDays(23));
-        MediaPost mediaPost6 = new MediaPost("mediaPostMinus24days", LocalDateTime.now().minusDays(24));
-        MediaPost mediaPost7 = new MediaPost("mediaPostMinus25days", LocalDateTime.now().minusDays(25));
-        MediaPost mediaPost8 = new MediaPost("mediaPostMinus26days", LocalDateTime.now().minusDays(26));
-        MediaPost mediaPost9 = new MediaPost("mediaPostMinus27days", LocalDateTime.now().minusDays(27));
-        MediaPost mediaPost10 = new MediaPost("mediaPostMinus28days", LocalDateTime.now().minusDays(28));
-        MediaPost mediaPost11 = new MediaPost("mediaPostMinus29days", LocalDateTime.now().minusDays(29));
-        MediaPost mediaPost12 = new MediaPost("mediaPostMinus30days", LocalDateTime.now().minusDays(30));
-        MediaPost mediaPost13 = new MediaPost("mediaPostMinus31days", LocalDateTime.now().minusDays(31));
-        MediaPost mediaPost14 = new MediaPost("mediaPostMinus30days", LocalDateTime.now().minusDays(32));
-
-
-        userFollowee.getPosts().add(mediaPost1);
-        userFollowee.getPosts().add(mediaPost2);
-        userFollowee.getPosts().add(mediaPost3);
-        userFollowee.getPosts().add(mediaPost4);
-        userFollowee.getPosts().add(mediaPost5);
-        userFollowee.getPosts().add(mediaPost6);
-        userFollowee.getPosts().add(mediaPost7);
-        userFollowee.getPosts().add(mediaPost8);
-        userFollowee.getPosts().add(mediaPost9);
-        userFollowee.getPosts().add(mediaPost10);
-        userFollowee.getPosts().add(mediaPost11);
-        userFollowee.getPosts().add(mediaPost12);
-        userFollowee.getPosts().add(mediaPost13);
-        userFollowee.getPosts().add(mediaPost14);
+    private void getUserFollowingMediaPosts() {
+        userFollowee.following.add("userFollowing1");
+        userFollowee.following.add("userFollowing2");
+        userFollowee.following.add("userFollowing3");
+        userFollowee.following.add("userFollowing4");
+        userFollowee.following.add("userFollowing5");
+        userFollowee.following.add("userFollowing6");
+        userFollowee.following.add("userFollowing7");
+        userFollowee.following.add("userFollowing8");
+        userFollowee.following.add("userFollowing9");
+        userFollowee.following.add("userFollowing10");
+        userFollowee.following.add("userFollowing11");
+        userFollowee.following.add("userFollowing12");
+        userFollowee.following.add("userFollowing13");
+        userFollowee.following.add("userFollowing14");
+        userFollowee.following.add("userFollowing15");
+        userFollowee.following.add("userFollowing16");
+        userFollowee.following.add("userFollowing17");
+        userFollowee.following.add("userFollowing18");
+        userFollowee.following.add("userFollowing19");
+        userFollowee.following.add("userFollowing20");
 
         when(userRepository.findUserByUserId(userIdFollowee)).thenReturn(userFollowee);
-        List<MediaPost> mediaPosts = mediaService.newsFeeds(userIdFollowee);
 
-        Assert.assertEquals(mediaPosts.get(0).getInsertTimeStamp().getDayOfMonth(), LocalDateTime.now().getDayOfMonth());
-        Assert.assertNotEquals(mediaPosts.size(), userFollowee.getPosts().size());
-        Assert.assertNotNull(mediaPosts);
+        User userFollowing1 = new User("userFollowing1");
+        User userFollowing2 = new User("userFollowing2");
+        User userFollowing3 = new User("userFollowing3");
+        User userFollowing4 = new User("userFollowing4");
+        User userFollowing5 = new User("userFollowing5");
+        User userFollowing6 = new User("userFollowing6");
+        User userFollowing7 = new User("userFollowing7");
+        User userFollowing8 = new User("userFollowing8");
+        User userFollowing9 = new User("userFollowing9");
+        User userFollowing10 = new User("userFollowing10");
+        User userFollowing11 = new User("userFollowing11");
+        User userFollowing12 = new User("userFollowing12");
+        User userFollowing13 = new User("userFollowing13");
+        User userFollowing14 = new User("userFollowing14");
+        User userFollowing15 = new User("userFollowing15");
+        User userFollowing16 = new User("userFollowing16");
+        User userFollowing17 = new User("userFollowing17");
+        User userFollowing18 = new User("userFollowing18");
+        User userFollowing19 = new User("userFollowing19");
+        User userFollowing20 = new User("userFollowing20");
+
+        userFollowing1.mediaPost = new MediaPost("postIdFollowing1", "contentId1", LocalDateTime.now());
+        userFollowing2.mediaPost = new MediaPost("postIdFollowing2", "contentId1", LocalDateTime.now());
+        userFollowing3.mediaPost = new MediaPost("postIdFollowing3", "contentId1", LocalDateTime.now());
+        userFollowing4.mediaPost = new MediaPost("postIdFollowing4", "contentId1", LocalDateTime.now());
+        userFollowing5.mediaPost = new MediaPost("postIdFollowing5", "contentId1", LocalDateTime.now());
+        userFollowing6.mediaPost = new MediaPost("postIdFollowing6", "contentId1", LocalDateTime.now());
+        userFollowing7.mediaPost = new MediaPost("postIdFollowing7", "contentId1", LocalDateTime.now());
+        userFollowing8.mediaPost = new MediaPost("postIdFollowing8", "contentId1", LocalDateTime.now());
+        userFollowing9.mediaPost = new MediaPost("postIdFollowing9", "contentId1", LocalDateTime.now());
+        userFollowing10.mediaPost = new MediaPost("postIdFollowing10", "contentId1", LocalDateTime.now());
+        userFollowing11.mediaPost = new MediaPost("postIdFollowing11", "contentId1", LocalDateTime.now());
+        userFollowing12.mediaPost = new MediaPost("postIdFollowing12", "contentId1", LocalDateTime.now());
+        userFollowing13.mediaPost = new MediaPost("postIdFollowing13", "contentId1", LocalDateTime.now());
+        userFollowing14.mediaPost = new MediaPost("postIdFollowing14", "contentId1", LocalDateTime.now());
+        userFollowing15.mediaPost = new MediaPost("postIdFollowing15", "contentId1", LocalDateTime.now());
+        userFollowing16.mediaPost = new MediaPost("postIdFollowing16", "contentId1", LocalDateTime.now());
+        userFollowing17.mediaPost = new MediaPost("postIdFollowing17", "contentId1", LocalDateTime.now());
+        userFollowing18.mediaPost = new MediaPost("postIdFollowing18", "contentId1", LocalDateTime.now());
+        userFollowing19.mediaPost = new MediaPost("postIdFollowing18", "contentId1", LocalDateTime.now());
+        userFollowing20.mediaPost = new MediaPost("postIdFollowing20", "contentId1", LocalDateTime.now());
+
+        when(userRepository.findUserByUserId("userFollowing1")).thenReturn(userFollowing1);
+        when(userRepository.findUserByUserId("userFollowing2")).thenReturn(userFollowing2);
+        when(userRepository.findUserByUserId("userFollowing3")).thenReturn(userFollowing3);
+        when(userRepository.findUserByUserId("userFollowing4")).thenReturn(userFollowing4);
+        when(userRepository.findUserByUserId("userFollowing5")).thenReturn(userFollowing5);
+        when(userRepository.findUserByUserId("userFollowing6")).thenReturn(userFollowing6);
+        when(userRepository.findUserByUserId("userFollowing7")).thenReturn(userFollowing7);
+        when(userRepository.findUserByUserId("userFollowing8")).thenReturn(userFollowing8);
+        when(userRepository.findUserByUserId("userFollowing9")).thenReturn(userFollowing9);
+        when(userRepository.findUserByUserId("userFollowing10")).thenReturn(userFollowing10);
+        when(userRepository.findUserByUserId("userFollowing11")).thenReturn(userFollowing11);
+        when(userRepository.findUserByUserId("userFollowing12")).thenReturn(userFollowing12);
+        when(userRepository.findUserByUserId("userFollowing13")).thenReturn(userFollowing13);
+        when(userRepository.findUserByUserId("userFollowing14")).thenReturn(userFollowing14);
+        when(userRepository.findUserByUserId("userFollowing15")).thenReturn(userFollowing15);
+        when(userRepository.findUserByUserId("userFollowing16")).thenReturn(userFollowing16);
+        when(userRepository.findUserByUserId("userFollowing17")).thenReturn(userFollowing17);
+        when(userRepository.findUserByUserId("userFollowing18")).thenReturn(userFollowing18);
+        when(userRepository.findUserByUserId("userFollowing19")).thenReturn(userFollowing19);
+        when(userRepository.findUserByUserId("userFollowing20")).thenReturn(userFollowing20);
     }
 
+    private void getMediaPosts() {
+        userFollowee.mediaPost = new MediaPost("latestPostId", "latestContent", LocalDateTime.now());
 
-    private void getUserWithMoreThan20Feeds() {
-        MediaPost mediaPost1 = new MediaPost("mediaPost1Minus1Day", LocalDateTime.now().minusDays(1));
-        MediaPost mediaPost2 = new MediaPost("mediaPost2Minus2Day", LocalDateTime.now().minusDays(2));
-        MediaPost mediaPost3 = new MediaPost("mediaPost3Minus3Day", LocalDateTime.now().minusDays(3));
-        MediaPost mediaPost4 = new MediaPost("mediaPost4Minus4Day", LocalDateTime.now().minusDays(4));
-        MediaPost mediaPost5 = new MediaPost("mediaPost5Minus5Day", LocalDateTime.now().minusDays(5));
-        MediaPost mediaPost6 = new MediaPost("mediaPost6Minus6Day", LocalDateTime.now().minusDays(6));
-        MediaPost mediaPost7 = new MediaPost("mediaPost7Minus7Day", LocalDateTime.now().minusDays(7));
-        MediaPost mediaPost8 = new MediaPost("mediaPost8Minus8Day", LocalDateTime.now().minusDays(8));
-        MediaPost mediaPost9 = new MediaPost("mediaPost9Minus9Day", LocalDateTime.now().minusDays(9));
-        MediaPost mediaPost10 = new MediaPost("mediaPost10Minus10Day", LocalDateTime.now().minusDays(10));
-        MediaPost mediaPost11 = new MediaPost("mediaPost11Minus11Day", LocalDateTime.now().minusDays(11));
-        MediaPost mediaPost12 = new MediaPost("mediaPost12Minus12Day", LocalDateTime.now().minusDays(12));
-        MediaPost mediaPost13 = new MediaPost("mediaPost13Minus13Day", LocalDateTime.now().minusDays(13));
-        MediaPost mediaPost14 = new MediaPost("mediaPost14Minus14Day", LocalDateTime.now().minusDays(14));
-        MediaPost mediaPost15 = new MediaPost("mediaPost15Minus15Day", LocalDateTime.now().minusDays(15));
-        MediaPost mediaPost16 = new MediaPost("mediaPost16Minus16Day", LocalDateTime.now().minusDays(16));
-        MediaPost mediaPost17 = new MediaPost("mediaPost17Minus17Day", LocalDateTime.now().minusDays(17));
-        MediaPost mediaPost18 = new MediaPost("mediaPost18Minus18Day", LocalDateTime.now().minusDays(18));
+        userFollowee.mediaPost.nextMediaPost = new MediaPost("latestPostId1", "latestContent1",
+                LocalDateTime.now());
 
-        userFollowee.getPosts().add(mediaPost1);
-        userFollowee.getPosts().add(mediaPost2);
-        userFollowee.getPosts().add(mediaPost3);
-        userFollowee.getPosts().add(mediaPost4);
-        userFollowee.getPosts().add(mediaPost5);
-        userFollowee.getPosts().add(mediaPost6);
-        userFollowee.getPosts().add(mediaPost7);
-        userFollowee.getPosts().add(mediaPost8);
-        userFollowee.getPosts().add(mediaPost9);
-        userFollowee.getPosts().add(mediaPost10);
-        userFollowee.getPosts().add(mediaPost11);
-        userFollowee.getPosts().add(mediaPost12);
-        userFollowee.getPosts().add(mediaPost13);
-        userFollowee.getPosts().add(mediaPost14);
-        userFollowee.getPosts().add(mediaPost15);
-        userFollowee.getPosts().add(mediaPost16);
-        userFollowee.getPosts().add(mediaPost17);
-        userFollowee.getPosts().add(mediaPost18);
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId2",
+                "latestContent2", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId3",
+
+                "latestContent3", LocalDateTime.now());
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost =
+                new MediaPost("latestPostId4", "latestContent4", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost =
+                new MediaPost("latestPostId5", "latestContent5", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost =
+                new MediaPost("latestPostId6", "latestContent6", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.
+                nextMediaPost = new MediaPost("latestPostId7", "latestContent7", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost = new MediaPost("latestPostId8", "latestContent8", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId9", "latestContent9", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost = new MediaPost("latestPostId10", "latestContent10", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId11", "latestContent11", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId12", "latestContent12", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId13",
+                "latestContent13", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost("latestPostId14",
+                "latestContent14", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost = new MediaPost(
+                "latestPostId15", "latestContent15", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost =
+                new MediaPost("latestPostId16", "latestContent16", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost = new MediaPost("latestPostId17", "latestContent17", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost = new MediaPost("latestPostId18", "latestContent18", LocalDateTime.now());
+
+        userFollowee.mediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost.nextMediaPost
+                .nextMediaPost.nextMediaPost = new MediaPost("latestPostId19", "latestContent19", LocalDateTime.now());
+
     }
 }

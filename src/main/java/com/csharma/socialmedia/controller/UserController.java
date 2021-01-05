@@ -8,7 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -25,7 +28,7 @@ public class UserController {
     }
 
     @PutMapping(value = "follow")
-    public ResponseEntity followUser(@RequestBody @Valid UserRequest userRequest) throws ServiceException {
+    public <T> ResponseEntity<T> followUser(@RequestBody @Valid UserRequest userRequest) throws ServiceException {
         LOGGER.info("Received request to follow user : {}", userRequest.getFolloweeId());
         userService.followUser(userRequest.getFollowerId(), userRequest.getFolloweeId());
         LOGGER.info("Successfully completed request to follow user : {}", userRequest.getFolloweeId());
@@ -33,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping(value = "unfollow")
-    public ResponseEntity unFollowUser(@RequestBody @Valid UserRequest userRequest) throws ServiceException {
+    public <T> ResponseEntity<T> unFollowUser(@RequestBody @Valid UserRequest userRequest) throws ServiceException {
         LOGGER.info("Received request to unfollow user : {}", userRequest.getFolloweeId());
         userService.unFollowUser(userRequest.getFollowerId(), userRequest.getFolloweeId());
         LOGGER.info("Successfully completed request to unfollow user : {}", userRequest.getFolloweeId());
